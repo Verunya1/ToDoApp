@@ -26,8 +26,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button login;
     private TextView register;
     private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authStateListener;
-    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,29 +34,17 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         initFirebase();
         initFields();
-        //initSharedPreferences();
-    }
-
-    private void initSharedPreferences() {
-        preferences = getPreferences(MODE_PRIVATE);
-        String e = preferences.getString(Utils.SHARED_PREFERENCES_EMAIL, "");
-        String p = preferences.getString(Utils.SHARED_PREFERENCES_PASSWORD, "");
-        if (!(e.isEmpty() || p.isEmpty()))
-            loginUser(e, p);
     }
 
     private void initFirebase() {
         auth = FirebaseAuth.getInstance();
 
-        authStateListener = firebaseAuth -> {
-            FirebaseUser user = auth.getCurrentUser();
-            if (user != null) {
-                ;
-            }
-            else {
-
-            }
-        };
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void initFields() {
@@ -84,7 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         else {
             auth.signInWithEmailAndPassword(e, p).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    initPreferences(e, p);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -93,13 +78,5 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Пароль не верный или пользователя не существует", Toast.LENGTH_SHORT).show();
             });
         }
-    }
-
-    private void initPreferences(String e, String p) {
-        preferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Utils.SHARED_PREFERENCES_EMAIL, e);
-        editor.putString(Utils.SHARED_PREFERENCES_PASSWORD, p);
-        editor.apply();
     }
 }

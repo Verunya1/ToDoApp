@@ -23,8 +23,6 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView login;
 
     private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authStateListener;
-    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +35,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initFirebase() {
         auth = FirebaseAuth.getInstance();
-        authStateListener = firebaseAuth -> {
-            FirebaseUser user = auth.getCurrentUser();
-            if (user != null) {
-                // user is signed in
-            }
-            else {
-                // user is signed out
-            }
-        };
     }
 
     private void initFields() {
@@ -69,7 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser(String e, String p) {
-        //Todo проверка на сущестрование пользователя
         if (e.isEmpty() || p.isEmpty() ||
         firstName.getText().toString().isEmpty() || lastName.getText().toString().isEmpty())
             Toast.makeText(RegisterActivity.this, "Пожалуйста, заполните все поля", Toast.LENGTH_SHORT).show();
@@ -83,7 +71,6 @@ public class RegisterActivity extends AppCompatActivity {
             auth.createUserWithEmailAndPassword(e, p).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(RegisterActivity.this, "Регистация прошла успешно", Toast.LENGTH_SHORT).show();
-                    initPreferences(e, p);
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -92,13 +79,5 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Ошибка регистрации или пользователь уже существует", Toast.LENGTH_SHORT).show();
             });
         }
-    }
-
-    private void initPreferences(String e, String p) {
-        preferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Utils.SHARED_PREFERENCES_EMAIL, e);
-        editor.putString(Utils.SHARED_PREFERENCES_PASSWORD, p);
-        editor.apply();
     }
 }

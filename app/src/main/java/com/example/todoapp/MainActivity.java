@@ -77,11 +77,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signOut() {
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Utils.SHARED_PREFERENCES_EMAIL, "");
-        editor.putString(Utils.SHARED_PREFERENCES_PASSWORD, "");
-        editor.apply();
         auth.signOut();
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
