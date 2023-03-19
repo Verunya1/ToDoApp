@@ -29,7 +29,7 @@
     <EditText
         android:id="@+id/et_firstname"
         style="@style/EditTextStyle"
-        android:text="Имя"
+        android:hint="Имя"
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/tv_register"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
     <EditText
         android:id="@+id/et_lastname"
         style="@style/EditTextStyle"
-        android:text="Фамилия"
+        android:hint="Фамилия"
         app:layout_constraintTop_toBottomOf="@id/et_firstname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -46,7 +46,8 @@
     <EditText
         android:id="@+id/et_email_reg"
         style="@style/EditTextStyle"
-        android:text="Email"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
         app:layout_constraintTop_toBottomOf="@id/et_lastname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -54,7 +55,8 @@
     <EditText
         android:id="@+id/et_password_reg"
         style="@style/EditTextStyle"
-        android:text="Пароль"
+        android:hint="Пароль"
+        android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_email_reg"
@@ -63,7 +65,8 @@
     <EditText
         android:id="@+id/et_password_confirm"
         style="@style/EditTextStyle"
-        android:text="Подтверждение пароля"
+        android:hint="Подтверждение пароля"
+        android:inputType="textPassword"
         app:layout_constraintTop_toBottomOf="@id/et_password_reg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
