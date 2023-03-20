@@ -10,8 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.todoapp.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -23,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView login;
 
     private FirebaseAuth auth;
+    private DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initFirebase() {
         auth = FirebaseAuth.getInstance();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
     }
 
     private void initFields() {
@@ -46,7 +51,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         register = findViewById(R.id.btn_register);
         register.setOnClickListener(view -> {
-            registerUser(email.getText().toString().trim(), password.getText().toString().trim());
+            User user = new User();
+            user.setEmail(email.getText().toString().trim());
+            user.setFirstName(firstName.getText().toString().trim());
+            user.setLastName(lastName.getText().toString().trim());
+
+            registerUser(user, password.getText().toString().trim());
         });
 
         login = findViewById(R.id.tv_enter);
@@ -57,19 +67,21 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUser(String e, String p) {
-        if (e.isEmpty() || p.isEmpty() ||
+    private void registerUser(User user, String p) {
+        if (user.getEmail().isEmpty() || p.isEmpty() ||
         firstName.getText().toString().isEmpty() || lastName.getText().toString().isEmpty())
             Toast.makeText(RegisterActivity.this, "Пожалуйста, заполните все поля", Toast.LENGTH_SHORT).show();
         else if (p.length() < 8)
             Toast.makeText(RegisterActivity.this, "Пароль должен содержать не менее 8 символов", Toast.LENGTH_SHORT).show();
         else if (!p.equals(passwordConfirm.getText().toString().trim()))
             Toast.makeText(RegisterActivity.this, "Пароли не совпадают", Toast.LENGTH_SHORT).show();
-        else if (!e.contains("@"))
+        else if (!user.getEmail().contains("@"))
             Toast.makeText(RegisterActivity.this, "Email другого формата", Toast.LENGTH_SHORT).show();
         else {
-            auth.createUserWithEmailAndPassword(e, p).addOnCompleteListener(task -> {
+            auth.createUserWithEmailAndPassword(user.getEmail(), p).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
+                    reference.setValue(auth.getCurrentUser().getUid());
+                    reference.child(auth.getCurrentUser().getUid()).setValue(user);
                     Toast.makeText(RegisterActivity.this, "Регистация прошла успешно", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
