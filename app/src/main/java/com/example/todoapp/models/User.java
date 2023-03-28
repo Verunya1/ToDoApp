@@ -1,6 +1,7 @@
 package com.example.todoapp.models;
 
 import java.util.List;
+import java.util.Map;
 
 public class User {
     private String firstName;
@@ -8,14 +9,13 @@ public class User {
     private String UID;
     private String email;
     private String imageUrl;
-    private List<Task> tasks;
+    private Map<String, Task> tasks;
 
     public User() {}
 
-    public User(String firstName, String lastName, String UID, String email, String imageUrl, List<Task> tasks) {
+    public User(String firstName, String lastName, String email, String imageUrl, Map<String, Task> tasks) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.UID = UID;
         this.email = email;
         this.imageUrl = imageUrl;
         this.tasks = tasks;
@@ -61,11 +61,11 @@ public class User {
         this.imageUrl = imageUrl;
     }
 
-    public List<Task> getTasks() {
+    public Map<String, Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(Map<String, Task> tasks) {
         this.tasks = tasks;
     }
 }
